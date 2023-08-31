@@ -1,9 +1,8 @@
 #!/bin/sh
-
+xbps-install -Syu
+xbps-install -y qemu-user-static liblz4
 set -eu
-
 . ./lib.sh
-
 PROGNAME=$(basename "$0")
 ARCH=$(uname -m)
 IMAGES="base enlightenment xfce mate cinnamon gnome kde lxde lxqt"
@@ -49,73 +48,17 @@ setup_pipewire() {
 }
 
 build_variant() {
-    variant="$1"
-    shift
     IMG=void-live-${ARCH}-${DATE}-${variant}.iso
     GRUB_PKGS="grub-i386-efi grub-x86_64-efi"
     A11Y_PKGS="espeakup void-live-audio brltty"
     PKGS="dialog cryptsetup lvm2 mdadm void-docs-browse xtools-minimal xmirror $A11Y_PKGS $GRUB_PKGS"
-    XORG_PKGS="xorg-minimal xorg-input-drivers xorg-video-drivers setxkbmap xauth font-misc-misc terminus-font dejavu-fonts-ttf orca"
-    SERVICES="sshd"
+    XORG_PKGS="xorg xorg-input-drivers xorg-video-drivers setxkbmap xauth font-misc-misc terminus-font dejavu-fonts-ttf openbox obconf lxappearance lxrandr lightdm octoxbps xbps alacritty neofetch"
+    SERVICES="sshd acpid dhcpcd wpa_supplicant lightdm dbus polkitd"
 
-    LIGHTDM_SESSION=''
-
-    case $variant in
-        base)
-            SERVICES="$SERVICES dhcpcd wpa_supplicant acpid"
-        ;;
-        enlightenment)
-            PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk3-greeter enlightenment terminology udisks2 firefox"
-            SERVICES="$SERVICES acpid dhcpcd wpa_supplicant lightdm dbus polkitd"
-            LIGHTDM_SESSION=enlightenment
-        ;;
-        xfce)
-            PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk3-greeter xfce4 gnome-themes-standard gnome-keyring network-manager-applet gvfs-afc gvfs-mtp gvfs-smb udisks2 firefox xfce4-pulseaudio-plugin"
-            SERVICES="$SERVICES dbus elogind lightdm NetworkManager polkitd"
-            LIGHTDM_SESSION=xfce
-        ;;
-        mate)
-            PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk3-greeter mate mate-extra gnome-keyring network-manager-applet gvfs-afc gvfs-mtp gvfs-smb udisks2 firefox"
-            SERVICES="$SERVICES dbus elogind lightdm NetworkManager polkitd"
-            LIGHTDM_SESSION=mate
-        ;;
-        cinnamon)
-            PKGS="$PKGS $XORG_PKGS lightdm lightdm-gtk3-greeter cinnamon gnome-keyring colord gnome-terminal gvfs-afc gvfs-mtp gvfs-smb udisks2 firefox"
-            SERVICES="$SERVICES dbus elogind lightdm NetworkManager polkitd"
-            LIGHTDM_SESSION=cinnamon
-        ;;
-        gnome)
-            PKGS="$PKGS $XORG_PKGS gnome firefox"
-            SERVICES="$SERVICES dbus elogind gdm NetworkManager polkitd"
-        ;;
-        kde)
-            PKGS="$PKGS $XORG_PKGS kde5 konsole firefox dolphin"
-            SERVICES="$SERVICES dbus elogind NetworkManager sddm"
-        ;;
-        lxde)
-            PKGS="$PKGS $XORG_PKGS lxde lightdm lightdm-gtk3-greeter gvfs-afc gvfs-mtp gvfs-smb udisks2 firefox"
-            SERVICES="$SERVICES acpid dbus dhcpcd wpa_supplicant lightdm polkitd"
-            LIGHTDM_SESSION=LXDE
-        ;;
-        lxqt)
-            PKGS="$PKGS $XORG_PKGS lxqt sddm gvfs-afc gvfs-mtp gvfs-smb udisks2 firefox"
-            SERVICES="$SERVICES elogind dbus dhcpcd wpa_supplicant sddm polkitd"
-        ;;
-        *)
-            >&2 echo "Unknown variant $variant"
-            exit 1
-        ;;
-    esac
-
-    if [ -n "$LIGHTDM_SESSION" ]; then
-        mkdir -p "$INCLUDEDIR"/etc/lightdm
-        echo "$LIGHTDM_SESSION" > "$INCLUDEDIR"/etc/lightdm/.session
-    fi
-
-    if [ "$variant" != base ]; then
-        setup_pipewire
-    fi
-
+    LIGHTDM_SESSION='openbox'
+    mkdir -p "$INCLUDEDIR"/etc/lightdm
+    echo "$LIGHTDM_SESSION" > "$INCLUDEDIR"/etc/lightdm/.session
+    setup_pipewire
     ./mklive.sh -a "$ARCH" -o "$IMG" -p "$PKGS" -S "$SERVICES" -I "$INCLUDEDIR" ${REPO} "$@"
 }
 
@@ -135,14 +78,4 @@ else
     exit 1
 fi
 
-if [ -n "$TRIPLET" ]; then
-    VARIANT="${TRIPLET##*-}"
-    REST="${TRIPLET%-*}"
-    DATE="${REST##*-}"
-    ARCH="${REST%-*}"
-    build_variant "$VARIANT" "$@"
-else
-    for image in $IMAGES; do
-        build_variant "$image" "$@"
-    done
-fi
+build_variant
