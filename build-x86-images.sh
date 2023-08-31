@@ -59,7 +59,7 @@ build_variant() {
     mkdir -p "$INCLUDEDIR"/etc/lightdm
     echo "$LIGHTDM_SESSION" > "$INCLUDEDIR"/etc/lightdm/.session
     setup_pipewire
-    ./mklive.sh -a "$ARCH" -o "$IMG" -p "$PKGS" -S "$SERVICES" -I "$INCLUDEDIR" ${REPO} "$@"
+    ./mklive.sh -a "$ARCH" -o "$IMG" -p "$PKGS" -S "$SERVICES" -I "$INCLUDEDIR"
 }
 
 if [ ! -x mklive.sh ]; then
