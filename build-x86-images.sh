@@ -28,19 +28,15 @@ else
     echo installer.sh not found >&2
     exit 1
 fi
-
+xbps-install -yu xbps
 xbps-install -Syu
 xbps-install -y qemu-user-static liblz4
 IMG=void-live-${ARCH}-${DATE}-openbox.iso
-GRUB_PKGS="grub-i386-efi grub-x86_64-efi"
-A11Y_PKGS="espeakup void-live-audio brltty"
-PKGS="dialog cryptsetup lvm2 mdadm void-docs-browse xtools-minimal xmirror $A11Y_PKGS $GRUB_PKGS"
-XORG_PKGS="xorg xorg-input-drivers xorg-video-drivers setxkbmap xauth font-misc-misc terminus-font dejavu-fonts-ttf openbox obconf lxappearance lxrandr lightdm octoxbps xbps alacritty neofetch lightdm-gtk-greeter"
+PKGS="pipewire alsa-pipewire dialog cryptsetup lvm2 mdadm void-docs-browse xtools-minimal xmirror grub-i386-efi grub-x86_64-efi xorg xorg-input-drivers xorg-video-drivers setxkbmap xauth font-misc-misc terminus-font dejavu-fonts-ttf openbox obconf lxappearance lxrandr lightdm octoxbps xbps alacritty neofetch lightdm-gtk-greeter"
 SERVICES="sshd acpid dhcpcd wpa_supplicant lightdm dbus polkitd"
 LIGHTDM_SESSION='openbox'
 mkdir -p "$INCLUDEDIR"/etc/lightdm
 echo "$LIGHTDM_SESSION" > "$INCLUDEDIR"/etc/lightdm/.session
-PKGS="$PKGS pipewire alsa-pipewire"
 mkdir -p "$INCLUDEDIR"/etc/xdg/autostart
 ln -s /usr/share/applications/pipewire.desktop "$INCLUDEDIR"/etc/xdg/autostart/
 mkdir -p "$INCLUDEDIR"/etc/pipewire/pipewire.conf.d
