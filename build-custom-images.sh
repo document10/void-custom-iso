@@ -26,13 +26,13 @@ else
     echo installer.sh not found >&2
     exit 1
 fi
-xbps-install -yu xbps
+xbps-install -Syu xbps
 xbps-install -Syu
 xbps-install -y qemu-user-static liblz4
 IMG=void-live-${ARCH}-${DATE}-openbox.iso
-PKGS="pipewire alsa-pipewire dialog cryptsetup lvm2 mdadm void-docs-browse xtools-minimal xmirror grub-i386-efi grub-x86_64-efi xterm xclock menumaker micro exa neofetch xorg xorg-input-drivers xorg-video-drivers setxkbmap xauth font-misc-misc terminus-font dejavu-fonts-ttf openbox obconf lxappearance lxrandr lightdm octoxbps xbps alacritty neofetch lightdm-gtk-greeter"
+PKGS="pipewire alsa-pipewire dialog cryptsetup lvm2 mdadm void-docs-browse xtools-minimal xmirror grub-i386-efi grub-x86_64-efi xterm xclock menumaker micro exa neofetch xorg xorg-input-drivers xorg-video-drivers setxkbmap xauth font-misc-misc terminus-font dejavu-fonts-ttf budgie-desktop budgie-screensaver polkit-gnome lightdm octoxbps xbps alacritty neofetch lightdm-gtk-greeter"
 SERVICES="sshd acpid dhcpcd wpa_supplicant lightdm dbus polkitd"
-LIGHTDM_SESSION='openbox'
+LIGHTDM_SESSION='budgie-desktop'
 mkdir -p "$INCLUDEDIR"/etc/lightdm
 echo "$LIGHTDM_SESSION" > "$INCLUDEDIR"/etc/lightdm/.session
 mkdir -p "$INCLUDEDIR"/etc/xdg/autostart
