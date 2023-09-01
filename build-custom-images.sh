@@ -30,7 +30,7 @@ xbps-install -Syu xbps
 xbps-install -Syu
 xbps-install -y qemu-user-static liblz4
 IMG=void-live-${ARCH}-${DATE}-openbox.iso
-PKGS="pipewire alsa-pipewire dialog cryptsetup lvm2 mdadm void-docs-browse xtools-minimal xmirror grub-i386-efi grub-x86_64-efi xterm xclock menumaker micro exa neofetch xorg xorg-input-drivers xorg-video-drivers setxkbmap xauth font-misc-misc terminus-font dejavu-fonts-ttf budgie-desktop budgie-screensaver polkit-gnome lightdm octoxbps xbps alacritty neofetch lightdm-gtk-greeter"
+PKGS="pipewire alsa-pipewire dialog cryptsetup lvm2 mdadm void-docs-browse xtools-minimal xmirror grub-i386-efi grub-x86_64-efi xterm xclock menumaker micro exa neofetch xorg xorg-input-drivers xorg-video-drivers setxkbmap xauth font-misc-misc terminus-font dejavu-fonts-ttf budgie-desktop budgie-screensaver polkit-gnome lightdm octoxbps xbps alacritty neofetch gvfs xdg-user-dirs xdg-utils btop vsv lightdm-gtk-greeter"
 SERVICES="sshd acpid dhcpcd wpa_supplicant lightdm dbus polkitd"
 LIGHTDM_SESSION='budgie-desktop'
 mkdir -p "$INCLUDEDIR"/etc/lightdm
